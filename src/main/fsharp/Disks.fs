@@ -20,17 +20,17 @@ let parts =
 
 let mutable stats = parts |> List.map (fun (k,v) -> (k,(0,0))) |> Map.ofList
 
-let disksio() = 
+let info(writer) =
     parts 
     |> List.iter (fun (k,v) -> 
         let ss = Util.readLine(v).Split(" ") 
                     |> Seq.filter (fun x -> x <> "")
                     |> Seq.toList
-        printfn "> %A" ss            
+        //printfn "> %A" ss            
         let r2,w2 = Int32.Parse(ss.[0]), Int32.Parse(ss.[4])
         let r1,w1 = stats.[k]            
         let dr, dw = r2-r1, w2-w1
         stats <- stats.Add(k, (r2, w2))
-        printfn "%s: out=%d in=%d" k dr dw
+        writer(k, dr, dw)
     )
 

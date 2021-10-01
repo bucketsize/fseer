@@ -11,9 +11,9 @@ let cpuTempFiles =
     ]
     |> List.filter (File.Exists)
 
-let thermalinfo() = 
+let info(writer) = 
     cpuTempFiles
     |> List.map (Util.readLine)
-    |> List.map (Int32.Parse)
-    |> List.iter(printfn "tz: %d")
+    |> List.map (fun x -> (Int32.Parse(x)/1000))
+    |> List.iter(writer)
 

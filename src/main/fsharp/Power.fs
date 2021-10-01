@@ -18,8 +18,5 @@ let psuinfo() =
             else 0
     (psu,status,level)
 
-let status() =
-    let psu,status,level = psuinfo()
-    printfn "psu: %s" psu
-    printfn "psuStatus: %s" status
-    printfn "psuLevel: %d" level
+let info(writer) =
+    writer(psuinfo())

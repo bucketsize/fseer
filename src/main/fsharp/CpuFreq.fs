@@ -15,7 +15,7 @@ let cpuFreq(ff:string) =
     stream.Close()
     Int32.Parse(line)/1000
 
-let cpuFreqs _ = 
+let info(writer) = 
     cpuFreqFiles 
     |> List.map cpuFreq
-    |> List.iter (printfn "cpufreq: %d")
+    |> List.iter writer

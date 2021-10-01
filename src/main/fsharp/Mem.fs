@@ -33,7 +33,7 @@ let meminfo()  =
         (mt,mf,st,sf)
     ) (mt,mf,st,sf)
     
-let usage() = 
+let info(writer) = 
     let mt,mf,st,sf = meminfo()
-    printfn "mem: %d" ((mt-mf)*100/mt)
+    writer((mt-mf)*100/mt)
 

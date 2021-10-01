@@ -17,10 +17,10 @@ let cputime cs0 cz0 =
 
 let mutable cs, cz = 0, 0
 
-let usage _ = 
+let info(writer)  = 
     let css, czz = cputime cs cz
     let cu = (1.0f - ((float32 (czz-cz))/(float32 (css-cs))))
     cs <- css  
     cz <- czz 
-    printfn "cpu: %f" cu
+    writer(cu*100f)
 
