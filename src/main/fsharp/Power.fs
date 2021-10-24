@@ -3,7 +3,13 @@ module Power
 open System
 open System.IO
 
-let psuinfo() = 
+type PowerInfo = {
+    psu: string;
+    status: string;
+    level: Int32;
+}
+
+let info () = 
     let psu =
         if File.Exists("/sys/class/power_supply/BAT0/status")
             then "Cell"
@@ -16,7 +22,6 @@ let psuinfo() =
         if psu = "Cell"
             then Int32.Parse(Util.readLine("/sys/class/power_supply/BAT0/capacity"))
             else 0
-    (psu,status,level)
+    {psu=psu;status=status;level=level}
 
-let info(writer) =
-    writer(psuinfo())
+    

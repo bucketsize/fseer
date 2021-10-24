@@ -3,6 +3,16 @@ module Disks
 open System
 open System.IO
 
+type Di = {
+    dev: string;
+    riops: Int32;
+    wiops: Int32;
+} 
+type DiskInfo = {
+    disks : List<Di>
+}
+
+// TODO: lookup and discover instead of test and discover
 let parts =
     [for i in ["a";"b";"c";"d";"e";"f";"g"] do
         for j = 0 to 3 do
@@ -18,11 +28,14 @@ let parts =
     ]
     |> List.filter (fun (k,v) -> File.Exists(v))
 
-let mutable stats = parts |> List.map (fun (k,v) -> (k,(0,0))) |> Map.ofList
-
-let info(writer) =
+let mutable stats =
     parts 
-    |> List.iter (fun (k,v) -> 
+        |> List.map (fun (k,v) -> (k,(0,0)))
+        |> Map.ofList
+
+let info () =
+    {disks = parts 
+    |> List.map (fun (k,v) -> 
         let ss = Util.readLine(v).Split(" ") 
                     |> Seq.filter (fun x -> x <> "")
                     |> Seq.toList
@@ -31,6 +44,6 @@ let info(writer) =
         let r1,w1 = stats.[k]            
         let dr, dw = r2-r1, w2-w1
         stats <- stats.Add(k, (r2, w2))
-        writer(k, dr, dw)
-    )
+        {dev = k; riops= dr; wiops=dw}
+    )}
 

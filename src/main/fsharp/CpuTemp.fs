@@ -3,6 +3,10 @@ module CpuTemp
 open System
 open System.IO
 
+type CpuTemp = {
+    temps: List<Int32>;
+}
+
 let cpuTempFiles =
     [for i = 0 to 15 do
         for j = 0 to 3 do
@@ -11,9 +15,8 @@ let cpuTempFiles =
     ]
     |> List.filter (File.Exists)
 
-let info(writer) = 
-    cpuTempFiles
+let info () = 
+    { temps = cpuTempFiles
     |> List.map (Util.readLine)
-    |> List.map (fun x -> (Int32.Parse(x)/1000))
-    |> List.iter(writer)
+    |> List.map (fun x -> (Int32.Parse(x)/1000)) }
 

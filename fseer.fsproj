@@ -8,7 +8,15 @@
 
   <ItemGroup>
     <Compile Include="src/main/fsharp/Util.fs" />
-    <Compile Include="src/main/fsharp/*.fs" />
+    <Compile Include="src/main/fsharp/Cpu.fs" />
+    <Compile Include="src/main/fsharp/CpuFreq.fs" />
+    <Compile Include="src/main/fsharp/CpuTemp.fs" />
+    <Compile Include="src/main/fsharp/Disks.fs" />
+    <Compile Include="src/main/fsharp/Mem.fs" />
+    <Compile Include="src/main/fsharp/Power.fs" />
+    <Compile Include="src/main/fsharp/Metrics.fs" />
+    <Compile Include="src/main/fsharp/ConsoleWriter.fs" />
+    <Compile Include="src/main/fsharp/Main.fs" />
   </ItemGroup>
 
 </Project>
