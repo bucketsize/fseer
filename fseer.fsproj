@@ -16,7 +16,12 @@
     <Compile Include="src/main/fsharp/Power.fs" />
     <Compile Include="src/main/fsharp/Metrics.fs" />
     <Compile Include="src/main/fsharp/ConsoleWriter.fs" />
+    <Compile Include="src/main/fsharp/LemonbarWriter.fs" />
     <Compile Include="src/main/fsharp/Main.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Mono.Posix.NETStandard" Version="1.0.0" />
   </ItemGroup>
 
 </Project>

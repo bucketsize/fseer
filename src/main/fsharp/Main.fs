@@ -13,5 +13,6 @@ let main argv =
             pwrinfo = Power.info();
         }
         ConsoleWriter.write sysinfo
+        LemonbarWriter.write sysinfo
         Thread.Sleep(2000)
     0 
