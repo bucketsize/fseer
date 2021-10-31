@@ -9,4 +9,5 @@ let write (p:Metrics) =
     p.meminfo.usage |> (fun x -> printfn "mem: %3.0f" (x*100f))
     p.dskinfo.disks |> List.iter (fun f -> 
         printfn "%s: %3d, %3d" f.dev f.riops f.wiops)
-    p.pwrinfo |> (fun x -> printfn "%s: %s, %3d" x.psu x.status x.level)
+    p.pwrinfo |> (fun x -> printfn "%s: %s, %2d" x.psu x.status x.level)
+    printfn "--"
