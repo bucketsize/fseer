@@ -10,4 +10,6 @@ let write (p:Metrics) =
     p.dskinfo.disks |> List.iter (fun f -> 
         printfn "%s: %3d, %3d" f.dev f.riops f.wiops)
     p.pwrinfo |> (fun x -> printfn "%s: %s, %2d" x.psu x.status x.level)
+    p.netinfo.intfs |> List.iter (fun f -> 
+        printfn "netIf :: %s: %d / %d" f.intf f.rx f.tx)
     printfn "--"

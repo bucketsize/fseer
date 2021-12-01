@@ -7,5 +7,6 @@ type Metrics = {
     meminfo: Mem.MemInfo;
     dskinfo: Disks.DiskInfo;
     pwrinfo: Power.PowerInfo;
+    netinfo: Net.NetInfo;
 }
 

@@ -3,11 +3,7 @@ module Util
 open System
 open System.IO
 open System.Runtime.InteropServices
-
-[<DllImport ("libc", SetLastError=true, EntryPoint="mkfifo")>]
-extern int _mkfifo (
-    //[MarshalAs (UnmanagedType.CustomMarshaler, MarshalTypeRef=typeof(FileNameMarshaler))]
-    string pathname, uint mode)
+open System.Runtime.CompilerServices
 
 // Mono.Unix/Syscall.cs
 let S_ISUID     = 0x0800u // Set user ID on execution
@@ -28,6 +24,11 @@ let S_IRWXO     = (S_IROTH ||| S_IWOTH ||| S_IXOTH)
 let ACCESSPERMS = (S_IRWXU ||| S_IRWXG ||| S_IRWXO) // 0777
 let ALLPERMS    = (S_ISUID ||| S_ISGID ||| S_ISVTX ||| S_IRWXU ||| S_IRWXG ||| S_IRWXO) // 07777
 let DEFFILEMODE = (S_IRUSR ||| S_IWUSR ||| S_IRGRP ||| S_IWGRP ||| S_IROTH ||| S_IWOTH) // 0666
+
+[<DllImport ("libc", SetLastError=true, EntryPoint="mkfifo")>]
+extern int _mkfifo (
+    //[MarshalAs (UnmanagedType.CustomMarshaler, MarshalTypeRef=typeof(FileNameMarshaler))]
+    string pathname, uint mode)
 
 let mkfifo (pathname:string) (mode:uint) = 
     //let _mode = NativeConvert.FromFilePermissions mode.value

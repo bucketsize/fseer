@@ -3,6 +3,7 @@ open Metrics
 
 [<EntryPoint>]
 let main argv =
+    let sndinfo = Snd.info();
     while true do
         let sysinfo: Metrics = {
             cpuinfo = Cpu.info();
@@ -11,6 +12,7 @@ let main argv =
             meminfo = Mem.info();
             dskinfo = Disks.info();
             pwrinfo = Power.info();
+            netinfo = Net.info();
         }
         ConsoleWriter.write sysinfo
         LemonbarWriter.write sysinfo

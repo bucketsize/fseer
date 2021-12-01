@@ -42,7 +42,7 @@ let info () =
         //printfn "> %A" ss            
         let r2,w2 = Int32.Parse(ss.[0]), Int32.Parse(ss.[4])
         let r1,w1 = stats.[k]            
-        let dr, dw = r2-r1, w2-w1
+        let dr,dw = r2-r1, w2-w1
         stats <- stats.Add(k, (r2, w2))
         {dev = k; riops= dr; wiops=dw}
     )}

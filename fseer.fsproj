@@ -13,6 +13,8 @@
     <Compile Include="src/main/fsharp/CpuTemp.fs" />
     <Compile Include="src/main/fsharp/Disks.fs" />
     <Compile Include="src/main/fsharp/Mem.fs" />
+    <Compile Include="src/main/fsharp/Net.fs" />
+    <Compile Include="src/main/fsharp/Snd.fs" />
     <Compile Include="src/main/fsharp/Power.fs" />
     <Compile Include="src/main/fsharp/Metrics.fs" />
     <Compile Include="src/main/fsharp/ConsoleWriter.fs" />
