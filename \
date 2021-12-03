@@ -1,0 +1,49 @@
+module Snd 
+
+open System
+open System.IO
+open System.Runtime.InteropServices
+open System.Runtime.CompilerServices
+open FSharp.NativeInterop
+open Pa
+open Util
+
+type SndInfo = {
+    vol: float32;
+    muted: bool;
+}
+let info () =
+    let paMainLoopPtr = pa_mainloop_new()
+    if isNaRefNull paMainLoopPtr
+    then printfn "pa main loop"
+    else () 
+
+    let paMainLoopApiPtr = pa_mainloop_get_api (NativePtr.toByRef paMainLoopPtr)    
+    if isNaRefNull paMainLoopApiPtr
+    then printfn "pa main loop api"
+    else () 
+
+    let paContextPtr = pa_context_new (NativePtr.toByRef paMainLoopApiPtr)
+    if isNaRefNull paContextPtr
+    then printfn "pa context"
+    else ()
+
+    let flags = pa_context_flags.PA_CONTEXT_NOFLAGS
+    let mutable a = pa_spawn_api() 
+    let c = pa_context_connect (NativePtr.toByRef paContextPtr, null, flags, &a)
+    if c < 0
+    then printfn "pa context connect failed: %d" c
+    else ()
+
+    let mutable paInfoCb = pa_server_info_cb_t()
+    let mutable paUdata = pa_userdata()
+    let paOpPtr = pa_context_get_server_info (NativePtr.toByRef paContextPtr, &paInfoCb, &paUdata)
+    if isNaRefNull paOpPtr
+    then printfn "pa op"
+    else ()
+
+    let paOp = NativePtr.read paOpPtr
+    printfn "index=%d, n_used=%d" paOp.index paOp.n_used
+
+    {vol=0f; muted=false}
+

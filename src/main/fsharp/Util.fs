@@ -4,6 +4,7 @@ open System
 open System.IO
 open System.Runtime.InteropServices
 open System.Runtime.CompilerServices
+open FSharp.NativeInterop
 
 // Mono.Unix/Syscall.cs
 let S_ISUID     = 0x0800u // Set user ID on execution
@@ -40,3 +41,8 @@ let readLine(f:string) =
     stream.Close()
     line
 
+let isNaRefNull (x:nativeptr<_>) = 
+    let j = NativePtr.read x
+    obj.ReferenceEquals (j, null)
+
+let isNaRefNotNull (x:nativeptr<_>) = not (isNaRefNull x)
