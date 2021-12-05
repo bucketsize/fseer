@@ -8,5 +8,6 @@ type Metrics = {
     dskinfo: Disks.DiskInfo;
     pwrinfo: Power.PowerInfo;
     netinfo: Net.NetInfo;
+    sndinfo: Snd.SndInfo;
 }
 

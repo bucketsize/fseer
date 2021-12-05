@@ -12,13 +12,16 @@ let cputime cs0 cz0 =
     let stream = new StreamReader @"/proc/stat"
     let line = stream.ReadLine()
     stream.Close()
-    let (_::values) = Seq.toList (line.Split [|' '|]) 
-    let cputs =
-        values 
-        |> List.filter (fun x -> (x <>  "")) 
-        |> List.map Int32.Parse
-    let cs, cz = List.sum cputs, cputs.Item 3 
-    cs, cz
+    let ls =  Seq.toList (line.Split [|' '|])
+    match ls with
+    | (_::values) ->  
+        let cputs =
+            values 
+            |> List.filter (fun x -> (x <>  "")) 
+            |> List.map Int32.Parse
+        let cs, cz = List.sum cputs, cputs.Item 3 
+        cs, cz
+    | [] -> cs0, cz0 
 
 let mutable cs, cz = 0, 0
 
