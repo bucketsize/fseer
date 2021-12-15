@@ -6,8 +6,8 @@ open System.Text.RegularExpressions
 
 type Ni = {
     intf: string;
-    rx: Int32; // Bytes
-    tx: Int32;
+    rx: UInt64; // Bytes
+    tx: UInt64;
 }
 type NetInfo = {
     intfs : List<Ni>
@@ -21,7 +21,7 @@ let info () =
             let xs = x.Split ":"
             let nd = xs.[0].Trim()
             let nv = (r.Matches xs.[1] 
-                |> Seq.map (fun x -> Int32.Parse(x.Value))
+                |> Seq.map (fun x -> UInt64.Parse(x.Value))
                 |> Seq.toList)
             {intf = nd;  rx = nv.Item 0; tx = nv.[1]})
         |> Seq.toList)

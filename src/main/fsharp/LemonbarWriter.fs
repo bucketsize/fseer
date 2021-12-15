@@ -20,7 +20,7 @@ let write (m:Metrics) =
             (m.cputemp.temps.Head)
             (m.meminfo.usage * 100f)
             (m.netinfo.intfs
-                |> List.filter (fun x -> x.rx > 0)
+                |> List.filter (fun x -> x.rx > 0UL)
                 ).[0].intf
             (if m.pwrinfo.psu = "AC" then "AC" else "Bat")
 
