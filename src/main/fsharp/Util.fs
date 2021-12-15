@@ -27,12 +27,9 @@ let ALLPERMS    = (S_ISUID ||| S_ISGID ||| S_ISVTX ||| S_IRWXU ||| S_IRWXG ||| S
 let DEFFILEMODE = (S_IRUSR ||| S_IWUSR ||| S_IRGRP ||| S_IWGRP ||| S_IROTH ||| S_IWOTH) // 0666
 
 [<DllImport ("libc", SetLastError=true, EntryPoint="mkfifo")>]
-extern int _mkfifo (
-    //[MarshalAs (UnmanagedType.CustomMarshaler, MarshalTypeRef=typeof(FileNameMarshaler))]
-    string pathname, uint mode)
+extern int _mkfifo (string pathname, uint mode)
 
 let mkfifo (pathname:string) (mode:uint) = 
-    //let _mode = NativeConvert.FromFilePermissions mode.value
     _mkfifo (pathname, mode)
 
 let readLine(f:string) = 
@@ -41,8 +38,9 @@ let readLine(f:string) =
     stream.Close()
     line
 
-let isNaRefNull (x:nativeptr<_>) = 
-    let j = NativePtr.read x
-    obj.ReferenceEquals (j, null)
+let isNull (x: _ nativeptr) = 
+    x = (NativePtr.ofNativeInt IntPtr.Zero)
+    //let j = NativePtr.read x
+    //obj.ReferenceEquals (j, null)
 
-let isNaRefNotNull (x:nativeptr<_>) = not (isNaRefNull x)
+let isNotNull (x: _ nativeptr) = not (isNull x)
