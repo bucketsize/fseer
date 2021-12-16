@@ -267,12 +267,6 @@ extern int pa_cvolume_valid (pa_cvolume& v)
 [<DllImport ("libpulse", EntryPoint="pa_cvolume_avg")>]
 extern pa_volume_t pa_cvolume_avg (pa_cvolume& v)
 
-[<DllImport ("libpulse", EntryPoint="pa_cvolume_snprint",CallingConvention=CallingConvention.Cdecl)>]
-extern sbyte* pa_cvolume_snprint (
-    sbyte* s,
-    int l,
-    pa_cvolume& c)
-
 [<DllImport ("libpulse", EntryPoint="pa_sw_volume_to_dB")>]
 extern double pa_sw_volume_to_dB(pa_volume_t v)
 

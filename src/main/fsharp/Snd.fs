@@ -15,11 +15,30 @@ let gcSkip<'a> (name:string) (o:'a) =
     GcHs <- GcHs.Add (name, o')
     o
 
+type LogSpec = {
+    level: string;
+}
+
+let logSpec = {level = "debug"}
+
+let printfv<'a> (level: string) (format: Printf.TextWriterFormat<'a>) = 
+    Printf.kprintf (printfn "[%s][%A] %s" level System.DateTime.Now format 
+
+let log_debug =
+    if logSpec.level = "debug"
+    then printfn 
+    else printfv
+
+
 let naNullRef<'a when 'a : unmanaged> () = 
         NativePtr.ofNativeInt<'a> IntPtr.Zero
 
+type Decibels = float
 type SndInfo = { 
-    mutable vol: float32;
+    mutable source: string
+    mutable sink: string
+    mutable port: string
+    mutable volume: Decibels; 
     mutable muted: bool;
 }
 
@@ -37,26 +56,29 @@ let mutable paContext =
     }
 let mutable sndInfo =
     {
-        vol=0f;
-        muted=false
+        source = "";
+        sink = "";
+        port = "";
+        volume =  0 |> float;
+        muted = false;
     }
 
 let prefork () =
-    printfn "prefork"
+    log_debug "prefork"
 let postfork () =
-    printfn "postfork"
+    log_debug "postfork"
 let atfork () =
-    printfn "atfork"
+    log_debug "atfork"
 let paSinkInfo 
   (c: pa_context nativeptr)
   (sIp: IntPtr)
   (eol: int)
   (userdata: IntPtr) = 
-    printfn "paSinkInfo"
+    log_debug "paSinkInfo"
     if eol = 0
     then
         let mutable sI = Marshal.PtrToStructure<pa_sink_info>(sIp)
-        printfn "%s" (sI.ToString())
+        log_debug "%s" (sI.ToString())
         let vols =
             sI.volume.values 
         let vols_dB =
@@ -65,25 +87,24 @@ let paSinkInfo
         let vols_linear =
             sI.volume.values
             |> Array.map (fun x -> pa_sw_volume_to_linear (x))
-        printfn "paSinkInfo.volumes: %d \n\t%A \n\t%A \n\t%A"
+        log_debug "paSinkInfo.volumes: %d \n\t%A \n\t%A \n\t%A"
             sI.base_volume
             vols
             vols_dB
             vols_linear
-        printfn "paSinkInfo::debug: pa_cvolume_valid=%d" (pa_cvolume_valid(&sI.volume))
+        log_debug "paSinkInfo::debug: pa_cvolume_valid=%d" (pa_cvolume_valid(&sI.volume))
 
         let paPropsStr =
             if isNotNull sI.proplist
             then pa_proplist_to_string (sI.proplist)
             else "null"
 
-        printfn "paSinkInfo::debug: pa_proplist=\n%s" paPropsStr
+        log_debug "paSinkInfo::debug: pa_proplist=\n%s" paPropsStr
 
         let pVolAvg = pa_cvolume_avg (&sI.volume)
-        printfn "paSinkInfo::debug: pa_cvolume_avg=%d" pVolAvg
-
-        let mutable strCVol = NativePtr.stackalloc<sbyte> 320
-        let strCVol1 = pa_cvolume_snprint (strCVol, 320 ,&sI.volume)
+    
+        sndInfo.volume <- (pa_sw_volume_to_dB (pVolAvg)) |> float
+        log_debug "paSinkInfo::debug: pa_cvolume_avg=%A" pVolAvg
         ()
         
     else
@@ -106,15 +127,19 @@ let querySink
             userdata)
     //let paOpPtr = pa_context_get_sink_info_list (c, paSinkInfoCb, userdata)
     if isNull paOpPtr
-    then printfn "pa_context_get_sink_info_by_name failed"
-    else printfn "pa_context_get_sink_info_by_name"
+    then log_debug "pa_context_get_sink_info_by_name failed"
+    else log_debug "pa_context_get_sink_info_by_name"
 
 let paServerInfo
   (c: pa_context nativeptr)
   (sIp: IntPtr)
   (userdata: IntPtr) = 
     let mutable sI = Marshal.PtrToStructure<pa_server_info> (sIp)
-    printfn "%s" (sI.ToString())
+    log_debug "%s" (sI.ToString())
+
+    sndInfo.source <- sI.default_source_name
+    sndInfo.sink <- sI.default_sink_name
+
     querySink c &sI userdata
 
 let queryServer
@@ -129,14 +154,14 @@ let queryServer
             paServerInfoCb,
             userdata)
     if isNull paOpPtr
-    then printfn "pa_context_get_server_info failed"
-    else printfn "pa_context_get_server_info"
+    then log_debug "pa_context_get_server_info failed"
+    else log_debug "pa_context_get_server_info"
     
 let paContextNotify
   (c: pa_context nativeptr)
   (userdata: IntPtr) = 
     let paState = pa_context_get_state (paContext.paContext)
-    printfn "paContextNotify::paState: %s" (paState.ToString())
+    log_debug "paContextNotify::paState: %s" (paState.ToString())
     if paState = pa_context_state_t.PA_CONTEXT_READY
     then
         paContext.paConnected <- true
@@ -146,18 +171,18 @@ let paContextNotify
 let paConnect () =
     let paMainLoopPtr = pa_mainloop_new()
     if isNull paMainLoopPtr
-    then printfn "pa_mainloop_new failed"
+    then log_debug "pa_mainloop_new failed"
     else () 
     paContext.paMainLoop <- paMainLoopPtr
 
     let paMainLoopApiPtr = pa_mainloop_get_api (paMainLoopPtr)    
     if isNull paMainLoopApiPtr
-    then printfn "pa_mainloop_get_api failed"
+    then log_debug "pa_mainloop_get_api failed"
     else () 
 
     let paContextPtr = pa_context_new (paMainLoopApiPtr, "fseer")
     if isNull paContextPtr
-    then printfn "pa_context_new failed"
+    then log_debug "pa_context_new failed"
     else ()
     paContext.paContext  <- paContextPtr
 
@@ -179,8 +204,8 @@ let paConnect () =
     
     let c = pa_context_connect (paContextPtr, null, flags, &apis)
     if c < 0
-    then printfn "pa_context_connect failed: %d" c
-    else printfn "pa_context_connect: %d" c 
+    then log_debug "pa_context_connect failed: %d" c
+    else log_debug "pa_context_connect: %d" c 
 
     paContext
 
