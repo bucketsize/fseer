@@ -21,12 +21,14 @@ type LogSpec = {
 
 let logSpec = {level = "debug"}
 
-let printfv<'a> (level: string) (format: Printf.TextWriterFormat<'a>) = 
-    Printf.kprintf (printfn "[%s][%A] %s" level System.DateTime.Now format 
+let printfv<'a>
+    (level: string)
+    (format: Printf.TextWriterFormat<'a>) =         
+        Printf.kprintf (printfn "[%s][%A] %s" level System.DateTime.Now format 
 
 let log_debug =
     if logSpec.level = "debug"
-    then printfn 
+    then printfn
     else printfv
 
 

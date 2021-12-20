@@ -1,0 +1,9 @@
+; (library
+;  (name futil)
+;  (modules (:standard \ fseer))
+;  )
+(executable
+ (name fseer)
+ (libraries base stdio futil)
+ )
+(include_subdirs unqualified)
