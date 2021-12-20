@@ -1,4 +1,3 @@
-open Base
 open Futil
 
 type mem_info = {

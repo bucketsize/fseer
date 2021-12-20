@@ -1,4 +1,3 @@
-open Base
 
 let rec read_lines channel acc =
     let mline = Stdio.In_channel.input_line channel in

@@ -1,11 +1,7 @@
 type metrics = {
-    cpuinfo: Cpu.CpuInfo;
-    cpufreq: CpuFreq.CpuFreq;
-    cputemp: CpuTemp.CpuTemp;
-    meminfo: Mem.MemInfo;
-    dskinfo: Disks.DiskInfo;
-    pwrinfo: Power.PowerInfo;
-    netinfo: Net.NetInfo;
-    sndinfo: Snd.SndInfo;
+    cpuinfo: Cpu.cpu_info;
+    cpufreq: Cpufreq.cpu_freq;
+    meminfo: Mem.mem_info;
+    netinfo: Net.net_info;
 }
 
