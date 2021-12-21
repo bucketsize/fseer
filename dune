@@ -1,5 +1,0 @@
-(executable
- (name fseer)
- (libraries base stdio str)
- )
-(include_subdirs unqualified)

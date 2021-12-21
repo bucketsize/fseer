@@ -1,0 +1,4 @@
+(library
+  (name fseer)
+  (libraries base stdio str))
+

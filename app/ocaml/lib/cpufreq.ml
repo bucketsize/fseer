@@ -1,5 +1,5 @@
 type cpu_freq = {
-    freqs: int32 list;
+    freqs: int list;
 }
 
 let seq_of_ints (s:int) (e:int) = 
@@ -21,7 +21,7 @@ let info () =
         |> List.map (fun f -> 
             let sfreq = (List.nth (Futil.read_file_lines f) 0) in
             let mfreq = Int32.div (Int32.of_string sfreq) 1000l in
-            mfreq )
+            Int32.to_int mfreq )
     in
-    {freqs=freqs}
+    {freqs = freqs}
 

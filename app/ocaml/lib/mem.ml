@@ -15,25 +15,26 @@ let info () =
         (fun mi line -> 
             mi.mt <- 
                 if has_in line "MemTotal: " 
-                then Float.of_string (extract_in_between "MemTotal: " "kB" line)
+                then float_of (extract_in_between "MemTotal: " " kB" line)
                 else mi.mt;
             mi.mt <-
                 if has_in line "MemTotal: " 
-                then Float.of_string (extract_in_between "MemTotal: " "kB" line)
+                then float_of (extract_in_between "MemTotal: " " kB" line)
                 else mi.mt;
             mi.mf <- 
                 if has_in line "MemFree: "
-                then Float.of_string (extract_in_between "MemFree: " "kB" line)
+                then float_of (extract_in_between "MemFree: " " kB" line)
                 else mi.mf;
             mi.st <-
                 if has_in line "SwapTotal: "
-                then Float.of_string (extract_in_between "SwapTotal: " "kB" line)
+                then float_of (extract_in_between "SwapTotal: " " kB" line)
                 else mi.st;
             mi.sf <- if has_in line "SwapFree: "
-                then Float.of_string (extract_in_between "SwapFree: " "kB" line)
+                then float_of (extract_in_between "SwapFree: " " kB" line)
                 else mi.sf;
             mi) in
     let mi1 = List.fold_left parsfn mi mlines in
+    (* let () = Printf.printf "mem: %f, %f, %f, %f" mi1.mf mi1.mt mi1.sf mi1.st in *)
     let () = mi1.usage <- ((mi1.mt -. mi1.mf) /. mi1.mt) in
     mi1
 
