@@ -11,20 +11,28 @@ let write_cpuf (p:Cpufreq.cpu_freq) =
     let favg = fsum / List.length p.freqs in
     printf "cpuf:%4d " favg
 
+let write_cput (p:Cputemp.cpu_temp) =
+    p.temps
+        |> (List.iter (fun x -> printf "cput:%3d " x))
+
 let write_mem (p:Mem.mem_info) = 
-    printf "mem:%3.0f " p.usage
+    printf "mem:%3.0f " (p.usage *. 100.0)
 
 let write_net (p:Net.net_info) = 
-    let () =printf "net" in
     p.intfs
     |> List.filter
-        (fun (x:Net.net_if) -> (x.tx > 0L))
+        (fun (y:(string*Net.net_if)) -> 
+            let _,x = y in
+            (x.tx > 0L) && (x.name <> "lo"))
     |> List.iter
-        (fun (x:Net.net_if) -> printf " %8s: %Ld %Ld " x.intf x.rx x.tx)
+        (fun (y:(string*Net.net_if)) -> 
+            let _,x = y in
+            printf "%s: [%Ld %Ld (%.1f %.1f)] " x.name x.rx x.tx x.dr x.dt)
 
 let write (p:Metrics.metrics) = 
     write_cpu p.cpuinfo;
     write_cpuf p.cpufreq;
+    write_cput p.cputemp;
     write_mem p.meminfo;
     write_net p.netinfo;
     print_newline ()

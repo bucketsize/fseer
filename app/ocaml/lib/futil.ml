@@ -1,3 +1,11 @@
+let rec get_item ls s =
+    match ls with
+    | (x::xs) -> 
+            let k, _ = x in
+            if k = s
+                then Some x
+                else get_item xs s
+    | [] ->  None        
 
 let rec read_lines channel acc =
     let mline = Stdio.In_channel.input_line channel in
@@ -32,7 +40,9 @@ let extract_in_between (s:string) (e:string) (line:string) =
         if is < 0 || ie < 0 then
             None
         else
-            Some (String.sub line (is + String.length s) (ie-is-(String.length s)))
+            let x = (String.sub line (is + String.length s) (ie-is-(String.length s))) in
+            (* let () = Printf.printf "|%s|\n" x in *)
+            Some (String.trim x)
 
 let has_in (s:string) (m:string) =
     let i = 
@@ -62,8 +72,23 @@ let float_of (s: string option) =
         with Failure _ -> 0.0)
     | None -> 0.0
 
+let int64_of (s: string option) =
+    match s with
+    | Some n -> (
+        try Int64.of_string n
+        with Failure _ -> 0L)
+    | None -> 0L
+
 let value_of (s: string option) (y: string) =
     match s with
     | Some x -> x
     | None -> y
+
+let seq_of_ints (s:int) (e:int) = 
+    let rec seq_of_ints_p (s:int) (e:int) (acc: int list) =
+        if s < e
+            then seq_of_ints_p (s+1) e (s::acc)
+            else acc
+    in
+    seq_of_ints_p s e []
 

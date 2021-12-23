@@ -1,14 +1,8 @@
+open Futil
+
 type cpu_freq = {
     freqs: int list;
 }
-
-let seq_of_ints (s:int) (e:int) = 
-    let rec seq_of_ints_p (s:int) (e:int) (acc: int list) =
-        if s < e
-            then seq_of_ints_p (s+1) e (s::acc)
-            else acc
-    in
-    seq_of_ints_p s e []
 
 let cpufreq_files =
     seq_of_ints 0 127

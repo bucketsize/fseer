@@ -40,16 +40,21 @@ let t07_float_of _ =
     assert_equal 0.0 (float_of (Some "22  ss   "));
     assert_equal 0.0 (float_of (Some "s   22  s")) 
 
+let t08_get_item _ =
+    let ls = [("ya", 77); ("ba", 88); ("da", 5); ("doo", 9)] in
+    assert_equal (Some ("ba", 88)) (get_item ls "ba")
+
 let suite =
   "FutilTest" >::: [
     "t01_has_in" >:: t01_has_in;
     "t02_has_in" >:: t02_has_in;
-    "t03_string_find_all" >:: t03_string_find_all ;
-    "t04_extract_in_between" >:: t04_extract_in_between ;
-    "t05_1_extract_in_between" >:: t05_1_extract_in_between ;
-    "t05_2_extract_in_between" >:: t05_2_extract_in_between ;
-    "t06_float_of" >:: t06_float_of ;
-    "t07_float_of" >:: t07_float_of ;
+    "t03_string_find_all" >:: t03_string_find_all;
+    "t04_extract_in_between" >:: t04_extract_in_between;
+    "t05_1_extract_in_between" >:: t05_1_extract_in_between;
+    "t05_2_extract_in_between" >:: t05_2_extract_in_between;
+    "t06_float_of" >:: t06_float_of;
+    "t07_float_of" >:: t07_float_of;
+    "t08_get_item" >:: t08_get_item;
   ]
 
 let () =
