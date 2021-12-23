@@ -4,5 +4,6 @@ type metrics = {
     cputemp: Cputemp.cpu_temp;
     meminfo: Mem.mem_info;
     netinfo: Net.net_info;
+    pwrinfo: Power.power_info;
 }
 

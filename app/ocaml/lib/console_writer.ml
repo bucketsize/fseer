@@ -29,11 +29,17 @@ let write_net (p:Net.net_info) =
             let _,x = y in
             printf "%s: [%Ld %Ld (%.1f %.1f)] " x.name x.rx x.tx x.dr x.dt)
 
+let write_pwr (p:Power.power_info) = 
+    if p.psu = "Psu"
+    then printf "%s" p.psu
+    else printf "%s %d %s" p.psu p.level p.status
+
 let write (p:Metrics.metrics) = 
     write_cpu p.cpuinfo;
     write_cpuf p.cpufreq;
     write_cput p.cputemp;
     write_mem p.meminfo;
     write_net p.netinfo;
+    write_pwr p.pwrinfo;
     print_newline ()
 

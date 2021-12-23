@@ -28,6 +28,12 @@ let read_file_lines filename =
     let () = Stdio.In_channel.close file_channel in
     lines
 
+let read_file_line filename = 
+    let file_channel = Stdio.In_channel.create filename in
+    let mline = Stdio.In_channel.input_line file_channel in
+    let () = Stdio.In_channel.close file_channel in
+    mline
+
 let extract_in_between (s:string) (e:string) (line:string) =
     let is = 
         try Str.search_forward (Str.regexp_string s) line 0
