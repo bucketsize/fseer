@@ -27,7 +27,9 @@ let write_net (p:Net.net_info) =
     |> List.iter
         (fun (y:(string*Net.net_if)) -> 
             let _,x = y in
-            printf "%s: [%Ld %Ld (%.1f %.1f)] " x.name x.rx x.tx x.dr x.dt)
+            printf "%s: [%Ld %Ld (%.1f %.1f)] " x.name
+                (Int64.div x.rx 1024L) 
+                (Int64.div x.tx 1024L) x.dr x.dt)
 
 let write_pwr (p:Power.power_info) = 
     if p.psu = "Psu"
