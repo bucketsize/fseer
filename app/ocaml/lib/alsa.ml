@@ -25,7 +25,10 @@ open Foreign
 type snd_mixer_t = unit
 let  snd_mixer_t : snd_mixer_t typ = void
 
+(* int 	snd_mixer_open (snd_mixer_t **mixer, int mode) *)
 let snd_mixer_open =
-    foreign "snd_mixer_open" (ptr snd_mixer_t @-> returning int)
+    foreign "snd_mixer_open" (ptr (ptr snd_mixer_t) @-> int @-> returning int)
 
-
+(* int 	snd_mixer_attach (snd_mixer_t *mixer, const char *name) *)
+let snd_mixer_attach =
+    foreign "snd_mixer_attach" (ptr snd_mixer_t @-> string @-> returning int)
