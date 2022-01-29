@@ -1,5 +1,8 @@
 obj/
 bin/
+build/
+_bin/
+_build/
 
 .fake
 .ionide
