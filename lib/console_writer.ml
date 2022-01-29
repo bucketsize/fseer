@@ -4,12 +4,7 @@ let write_cpu (p:Cpu.cpu_info) =
     printf "cpu:%3.0f " (p.usage *. 100.0)
 
 let write_cpuf (p:Cpufreq.cpu_freq) =
-    let fsum = 
-        p.freqs 
-        |> (List.fold_left (fun s x -> s + x) 0)
-    in
-    let favg = fsum / List.length p.freqs in
-    printf "cpuf:%4d " favg
+    printf "cpuf:%4d " p.freq_avg
 
 let write_cput (p:Cputemp.cpu_temp) =
     p.temps

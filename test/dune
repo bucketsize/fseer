@@ -1,0 +1,3 @@
+(test
+ (name fseer)
+ (libraries base stdio str fseer ounit2))

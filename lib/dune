@@ -1,0 +1,3 @@
+(library
+ (name fseer)
+ (libraries base stdio str ctypes.foreign))

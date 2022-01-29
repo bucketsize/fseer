@@ -2,6 +2,8 @@ open Futil
 
 type cpu_freq = {
     freqs: int list;
+    freq_avg: int;
+    freq_tot: int;
 }
 
 let cpufreq_files =
@@ -17,5 +19,14 @@ let info () =
             let mfreq = Int32.div (Int32.of_string sfreq) 1000l in
             Int32.to_int mfreq )
     in
-    {freqs = freqs}
+    let fsum = 
+        freqs 
+        |> (List.fold_left (fun s x -> s + x) 0)
+    in
+    let favg = 
+        if List.length freqs > 0
+            then fsum / List.length freqs 
+            else 0
+    in    
+    {freqs = freqs;freq_tot=fsum;freq_avg=favg}
 

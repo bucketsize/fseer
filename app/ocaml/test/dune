@@ -1,3 +1,0 @@
-(test 
-  (name futil_test)
-  (libraries base stdio str fseer ounit2))

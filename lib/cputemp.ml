@@ -2,6 +2,7 @@ open Futil
 
 type cpu_temp = {
     temps: int list;
+    temp_max: int;
 }
 
 let cputemp_files_ryzen = 
@@ -12,12 +13,12 @@ let cputemp_files_ryzen =
     let l = k |> List.flatten in
     l 
         |> List.map (fun (i1, j1) -> 
-                Printf.sprintf "/sys/class/hwmon/hwmon%d/temp%d_label" i1 j1
-            )
+                Printf.sprintf "/sys/class/hwmon/hwmon%d/temp%d_label" i1 j1)
         |> List.filter (fun f -> Sys.file_exists f)
 
 let cputemp_files_pi4 = 
     ["/sys/class/thermal/thermal_zone0/temp"]
+    |> List.filter (fun f -> Sys.file_exists f)
 
 let cputemp_files =
     List.append 
@@ -32,6 +33,11 @@ let info () =
                 List.nth ls 0)
         |> List.map (fun x -> Int32.to_int (Int32.div (Int32.of_string x) 1000l))
     in
-    {temps = temps}
+    let tmax = (* TODO: get correct tmin *)
+        if List.length temps > 0
+            then List.nth temps 0
+            else 0
+    in 
+    {temps = temps; temp_max = tmax}
 
 

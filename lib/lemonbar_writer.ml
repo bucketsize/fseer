@@ -11,13 +11,7 @@ let write (p:Metrics.metrics) =
         mem = p.meminfo   and
         net = p.netinfo   and
         pwr = p.pwrinfo   in
-    let fsum = 
-        cpuf.freqs 
-        |> (List.fold_left (fun s x -> s + x) 0)
-    in
-    let favg = fsum / List.length cpuf.freqs and 
-        tany = List.nth cput.temps 0         and 
-        netif = net.intfs
+    let netif = net.intfs
                 |> List.filter
                     (fun (y:(string*Net.net_if)) -> 
                         let _,x = y in
@@ -28,7 +22,6 @@ let write (p:Metrics.metrics) =
                         (x.name,
                             (Int64.div x.rx 1024L), 
                             (Int64.div x.tx 1024L), x.dr, x.dt))
-    
     in
     let n,tr,tx,rr,rx = List.nth netif 0 and 
         psu, pl, ps =
@@ -48,8 +41,8 @@ let write (p:Metrics.metrics) =
         timetm.tm_min
         timetm.tm_sec
         (cpu.usage *. 100.0)
-        favg
-        tany
+        cpuf.freq_avg
+        cput.temp_max
         (mem.usage *. 100.0)
         n tr tx rr rx
         psu pl ps

@@ -1,4 +1,0 @@
-(executable
-  (name fseer)
-  (flags :standard -cclib -lasound -cclib -lpulse)
-  (libraries base stdio str unix fseer ctypes.foreign))
