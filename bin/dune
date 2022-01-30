@@ -2,5 +2,6 @@
  (public_name fseer)
  (name fseer)
  (modes byte exe)
- (flags :standard -cclib -lasound -cclib -lpulse)
+ (flags :standard -cclib -lasound -cclib -lpulse -cclib -lc -cclib -lasmrun)
  (libraries base stdio str unix fseer ctypes.foreign))
+

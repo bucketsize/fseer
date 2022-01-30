@@ -8,7 +8,7 @@ let () =
             | _ -> Console_writer.write
         else
             Console_writer.write and
-        () = Sound.info()    
+        () = Sound_proxy.info() |> ignore
     in
     while true do 
         let sysinfo: Metrics.metrics = {
@@ -18,6 +18,7 @@ let () =
             meminfo = Mem.info();
             netinfo = Net.info();
             pwrinfo = Power.info();
+            sndinfo = Sound_proxy.info();
         } in
         writefn sysinfo;
         flush_all ();

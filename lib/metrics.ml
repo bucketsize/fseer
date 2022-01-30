@@ -5,5 +5,6 @@ type metrics = {
     meminfo: Mem.mem_info;
     netinfo: Net.net_info;
     pwrinfo: Power.power_info;
+    sndinfo: Sound.snd_info;
 }
 
