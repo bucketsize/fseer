@@ -1,3 +1,3 @@
 let info () =
-    Sound_pulseaudio_ocaml.info ()
+    Fseerffi.Sound_pulseaudio.info ()
 

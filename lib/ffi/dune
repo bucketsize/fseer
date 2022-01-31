@@ -1,0 +1,8 @@
+(library
+ (name fseerffi)
+ (libraries base stdio str fseerrec)
+ (foreign_stubs
+  (language c)
+  (names pulseaudio)
+  (flags (:standard)))
+ (c_library_flags (:standard -lpulse -lasound)))

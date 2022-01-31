@@ -11,7 +11,7 @@ let () =
         () = Sound_proxy.info() |> ignore
     in
     while true do 
-        let sysinfo: Metrics.metrics = {
+        let sysinfo: Fseerrec.Metrics.metrics = {
             cpuinfo = Cpu.info();
             cpufreq = Cpufreq.info();
             cputemp = Cputemp.info();

@@ -1,8 +1,4 @@
 (library
  (name fseer)
- (libraries base stdio str ctypes.foreign)
- (foreign_stubs
-  (language c)
-  (names ocaml_pulseaudio)
-  (flags (:standard)))
- (c_library_flags (:standard)))
+ (libraries base stdio str fseerffi fseerctypes fseerrec)
+ (c_library_flags (:standard -lpulse -lasound)))

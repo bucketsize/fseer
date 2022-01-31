@@ -1,10 +1,5 @@
 open Futil
-
-type power_info = {
-    psu: string;
-    status: string;
-    level:  int;
-}
+open Fseerrec.Power
 
 let info () = 
     let psu =

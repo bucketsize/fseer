@@ -1,12 +1,13 @@
 open Printf
+open Fseerrec
 
 let write_cpu (p:Cpu.cpu_info) = 
     printf "cpu:%3.0f " (p.usage *. 100.0)
 
-let write_cpuf (p:Cpufreq.cpu_freq) =
+let write_cpuf (p:Cpu_freq.cpu_freq) =
     printf "cpuf:%4d " p.freq_avg
 
-let write_cput (p:Cputemp.cpu_temp) =
+let write_cput (p:Cpu_temp.cpu_temp) =
     p.temps
         |> (List.iter (fun x -> printf "cput:%3d " x))
 

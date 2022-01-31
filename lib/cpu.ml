@@ -1,11 +1,5 @@
 open Futil
-
-type cpu_info = {
-    mutable arch: string;
-    mutable usage: float;
-    mutable cs: int64;
-    mutable cz: int64;
-}
+open Fseerrec.Cpu
 
 let ci = {arch="foo"; usage=0.0; cs=0L; cz=0L}
 

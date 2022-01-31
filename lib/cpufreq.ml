@@ -1,10 +1,5 @@
 open Futil
-
-type cpu_freq = {
-    freqs: int list;
-    freq_avg: int;
-    freq_tot: int;
-}
+open Fseerrec.Cpu_freq
 
 let cpufreq_files =
     seq_of_ints 0 127

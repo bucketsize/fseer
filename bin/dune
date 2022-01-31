@@ -3,5 +3,5 @@
  (name fseer)
  (modes byte exe)
  (flags :standard -cclib -lasound -cclib -lpulse -cclib -lc -cclib -lasmrun)
- (libraries base stdio str unix fseer ctypes.foreign))
+ (libraries base stdio str unix ctypes.foreign fseer fseerffi fseerctypes fseerrec))
 

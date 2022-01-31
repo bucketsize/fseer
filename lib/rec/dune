@@ -1,0 +1,3 @@
+(library
+ (name fseerrec)
+ (libraries base stdio str ctypes.foreign))

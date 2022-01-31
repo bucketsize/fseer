@@ -1,9 +1,5 @@
 open Futil
-
-type cpu_temp = {
-    temps: int list;
-    temp_max: int;
-}
+open Fseerrec.Cpu_temp
 
 let cputemp_files_ryzen = 
     let i = seq_of_ints 0 15 and

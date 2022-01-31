@@ -1,0 +1,4 @@
+(library
+ (name fseerctypes)
+ (libraries base stdio str ctypes.foreign fseerrec)
+ (c_library_flags (:standard -lpulse -lasound)))

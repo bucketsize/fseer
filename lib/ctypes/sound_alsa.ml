@@ -1,8 +1,8 @@
 open Ctypes
 
 open Printf
-open Sound
-open Ctype_alsa
+open Alsa
+open Fseerrec.Sound
 
 let alsainfo () =
 (* long min, max; *)
@@ -22,7 +22,7 @@ let alsainfo () =
 (* snd_mixer_elem_t* elem = snd_mixer_find_selem(handle, sid); *)
 
 (* snd_mixer_selem_get_playback_volume_range(elem, &min, &max); *)
-    let sndinfo = {card="default"; mixer="Master"; vol=0} in
+    let sndinfo = {card="default";mixer="Master";sink="?";volume=0;muted=false} in
     let handle_ref = allocate (ptr snd_mixer_t) (from_voidp snd_mixer_t null) in
     snd_mixer_open handle_ref 0
     |> (fun pre -> 
