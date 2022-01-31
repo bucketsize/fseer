@@ -1,7 +1,12 @@
 (executable
  (public_name fseer)
  (name fseer)
- (modes byte exe)
- (flags :standard -cclib -lasound -cclib -lpulse -cclib -lc -cclib -lasmrun)
+ (modes 
+   (native exe)
+   ; (byte exe)
+   ; (byte c)
+   ; (byte js)
+   )
+ ; (flags :standard -cclib -lasound -cclib -lpulse -cclib -lc -cclib -lasmrun)
+ (flags :standard -cclib -lpulse)
  (libraries base stdio str unix ctypes.foreign fseer fseerffi fseerctypes fseerrec))
-
