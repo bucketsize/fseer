@@ -1,15 +1,32 @@
 #!/bin/sh 
 
+bin_name=$2
+bin_dir=/tmp/build/default/bin
+bin=$bin_dir/$bin_name.exe
+pack_dir=/tmp/$bin_name
+bin_new=$pack_dir/$bin_name.$(arch)
+
+
+assert() {
+    if [ "" = "$1" ]; then
+        echo "expect valid"
+        exit 1
+    fi
+}
+assert_file() {
+    if [ ! -f $1 ]; then
+        echo "missing: $1"
+        exit 1
+    fi
+}
+
 case $1 in
     clean)
         dune clean --build-dir /tmp/build --profile release
         ;;
     pack)
-        bin_name=$2
-        bin_dir=/tmp/build/default/bin
-        bin=$bin_dir/$bin_name.exe
-        [ -f $bin ] || exit 10
-        pack_dir=/tmp/$bin_name
+        assert $bin_name
+        assert_file $bin
         chmod +rwx $bin
         strip $bin
         if [ -d $pack_dir ]; then
@@ -17,11 +34,14 @@ case $1 in
         else 
             mkdir $pack_dir
         fi
-        bin_new=$pack_dir/$bin_name.$(arch)
         cp $bin $bin_new
         sha256sum $bin_new > $bin_new.sha256
         tar -czf $bin_new.tar.gz -C $pack_dir $bin_name.$(arch) 
         echo "packages exported to $pack_dir"
+        ;;
+    install)
+        assert_file $bin_new
+        cp -av $bin_new ~/.local/bin
         ;;
     *)
         dune build --build-dir /tmp/build --profile release
