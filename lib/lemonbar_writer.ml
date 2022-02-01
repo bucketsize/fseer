@@ -32,8 +32,10 @@ let write (p:Metrics.metrics) =
             else (pwr.psu, pwr.level, pwr.status) and
         timetm = Unix.localtime (Unix.time ())
     in 
-    printf 
-        "%%{l} %s %s %s %%{c} %s | %s %02d, %02d | %02d:%02d:%02d %%{r}cpu:(%2.0f %4dMHz %3d C) mem:%2.0f %s:(%.1f %.1f) %s%02d %s %02d %s \n"
+    printf
+        "%%{l} /%s %s %s\
+         %%{c} /%s | %s %02d, %02d | %02d:%02d:%02d\
+         %%{r} /Cpu %02.0f %4dMHz %3dC /Mem %2.0f /%s %.1f %.1f /Vol %02d %s /%s %02d %s\n"
         "?" "?" "?"
         (List.nth weDays timetm.tm_wday)
         (List.nth months timetm.tm_mon)
@@ -47,6 +49,6 @@ let write (p:Metrics.metrics) =
         cput.temp_max
         (mem.usage *. 100.0)
         n rr rx
-        (if snd.muted then "muted: " else "vol: ")
         snd.volume
+        (if snd.muted then "muted" else "")
         psu pl ps
