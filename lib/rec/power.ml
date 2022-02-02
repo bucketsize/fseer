@@ -4,3 +4,5 @@ type power_info = {
     level:  int;
 }
 
+let power_info_i = {psu="?";status="?";level=0}
+

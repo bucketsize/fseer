@@ -1,7 +1,7 @@
 open Futil
 open Fseerrec.Mem
 
-let info zfn =
+let info (m: Fseerrec.Metrics.metrics) zfn =
     let mi = {usage=0.0; mt=0L; mf=0L; st=0L; sf=0L} in
     let mlines = read_file_lines "/proc/meminfo" in
     let parsfn = 
@@ -27,5 +27,5 @@ let info zfn =
     let mf = (Int64.to_float mi1.mf) and
         mt = (Int64.to_float mi1.mt) in
     let () = mi1.usage <- (1.0 -. (mf /. mt)) in
-    mi1
+    m.mem_info <- mi1
 

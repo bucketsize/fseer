@@ -21,7 +21,7 @@ let cputemp_files =
         cputemp_files_ryzen
         cputemp_files_pi4
 
-let info zfn = 
+let info (m: Fseerrec.Metrics.metrics) zfn = 
     let temps = 
         cputemp_files
         |> List.map (fun x -> 
@@ -34,6 +34,6 @@ let info zfn =
             then List.nth temps 0
             else 0
     in 
-    {temps = temps; temp_max = tmax}
+    m.cpu_temp <- {temps = temps; temp_max = tmax}
 
 

@@ -6,7 +6,7 @@ let cpufreq_files =
     |> List.map (Printf.sprintf "/sys/devices/system/cpu/cpu%d/cpufreq/scaling_cur_freq")
     |> List.filter (fun x -> Sys.file_exists x)
 
-let info zfn =  
+let info (m: Fseerrec.Metrics.metrics) zfn =  
     let freqs =
         cpufreq_files
         |> List.map (fun f -> 
@@ -23,5 +23,5 @@ let info zfn =
             then fsum / List.length freqs 
             else 0
     in    
-    {freqs = freqs;freq_tot=fsum;freq_avg=favg}
+    m.cpu_freq <- {freqs = freqs;freq_tot=fsum;freq_avg=favg}
 

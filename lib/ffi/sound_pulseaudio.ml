@@ -15,34 +15,39 @@ type pa_info = {
 
 let pa_info0 = {context_connected=false;}
 
-let info zfn =
+let info (m: Fseerrec.Metrics.metrics) zfn =
     if not pa_info0.context_connected then
         let () = Pulseaudio.connect_cb 
                     (fun status -> 
-                        let () = pa_info0.context_connected <- true in
-                        printf "oc> connected: %d\n" status) and
+                        printf "oc> connected: %d\n" status;
+                        pa_info0.context_connected <- true
+                        ) and
             () = Pulseaudio.sink_cb 
                     (fun sink ->
+                        printf "oc> sink: %s\n" sink;
                         let () = snd_info0.sink <- sink in
-                        let () = match zfn with
-                                    | Some fn -> fn () 
-                                    | None -> () in
-                        printf "oc> sink: %s\n" sink) and
+                        let () = m.snd_info <- snd_info0 in
+                        ()
+                        (* zfn m *)
+                        ) and
             () = Pulseaudio.volume_cb 
                     (fun volume -> 
+                        printf "oc> volume: %f\n" volume;
                         let () = snd_info0.volume <-
                                     (Int.of_float (volume *. 100.0)) in
-                        let () = match zfn with
-                                    | Some fn -> fn () 
-                                    | None -> () in
-                        printf "oc> volume: %f\n" volume) and
+                        let () = m.snd_info <- snd_info0 in
+                        ()
+                        (* zfn m *)
+                        ) and
             () = Pulseaudio.muted_cb 
                     (fun muted ->
+                        printf "oc> muted: %B\n" muted;
                         let () = snd_info0.muted <- muted in
-                        printf "oc> muted: %B\n" muted) in
-        let () = Pulseaudio.connect () in
-        snd_info0
+                        let () = m.snd_info <- snd_info0 in
+                        ()
+                        (* zfn m *)
+                        ) in
+        Pulseaudio.connect ()
     else
-        let () = Pulseaudio.tick () in
-        snd_info0
+        Pulseaudio.tick ()
     

@@ -8,7 +8,7 @@ let ni = {
 
 let pi = Float.of_int Consts.poll_interval
 
-let info zfn =
+let info (m: Fseerrec.Metrics.metrics) zfn =
     let intfs = 
         read_file_lines "/proc/net/dev"
         |> List.filter (fun x -> not (has_in x "Inter"))
@@ -40,6 +40,6 @@ let info zfn =
                             dt = 0.0})
             )
     in
-    let () = ni.intfs <- intfs
-    in ni
+    let () = ni.intfs <- intfs in
+    m.net_info <- ni
 

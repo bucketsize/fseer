@@ -6,3 +6,4 @@ type mem_info = {
     mutable sf: int64;
 }
 
+let mem_info_i = {usage=0.0;mt=0L;mf=0L;st=0L;sf=0L}

@@ -1,0 +1,3 @@
+(library
+ (name fseerout)
+ (libraries base stdio str ctypes.foreign fseerrec))

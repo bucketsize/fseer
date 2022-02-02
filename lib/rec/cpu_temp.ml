@@ -3,3 +3,4 @@ type cpu_temp = {
     temp_max: int;
 }
 
+let cpu_temp_i = {temps=[];temp_max=0}

@@ -30,14 +30,22 @@ let write_net (p:Net.net_info) =
 let write_pwr (p:Power.power_info) = 
     if p.psu = "Psu"
     then printf "%s" p.psu
-    else printf "%s %d %s" p.psu p.level p.status
+    else printf "%s %d %s " p.psu p.level p.status
+
+let write_snd (p:Sound.sound_info) = 
+    printf "snd:[ %s %s %s %d %s] " p.card
+        p.mixer
+        p.sink
+        p.volume
+        (if p.muted then "muted" else "")
 
 let write (p:Metrics.metrics) = 
-    write_cpu p.cpuinfo;
-    write_cpuf p.cpufreq;
-    write_cput p.cputemp;
-    write_mem p.meminfo;
-    write_net p.netinfo;
-    write_pwr p.pwrinfo;
+    write_cpu p.cpu_info;
+    write_cpuf p.cpu_freq;
+    write_cput p.cpu_temp;
+    write_mem p.mem_info;
+    write_net p.net_info;
+    write_snd p.snd_info;
+    write_pwr p.pwr_info;
     print_newline ()
 

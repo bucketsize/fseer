@@ -1,19 +1,6 @@
 open Fseer
-
-let update_fn writefn (cb: ((unit -> unit) option)) =
-    (fun () -> 
-        Printf.printf "oc> callback called\n";
-        let sysinfo: Fseerrec.Metrics.metrics = {
-            cpuinfo = Cpu.info(cb);
-            cpufreq = Cpu_freq.info(cb);
-            cputemp = Cpu_temp.info(cb);
-            meminfo = Mem.info(cb);
-            netinfo = Net.info(cb);
-            pwrinfo = Power.info(cb);
-            sndinfo = Sound_proxy.info(cb);
-        } in
-        let () = writefn sysinfo in
-        flush_all ())
+open Fseerout
+open Printf
 
 let () =
     let writefn =
@@ -22,10 +9,26 @@ let () =
             | "lemonbar" -> Lemonbar_writer.write
             | _ -> Console_writer.write
         else
-            Console_writer.write  in
-    let update_cb = Some (update_fn writefn None) in
+            Console_writer.write in
+    let noti_fn (m: Fseerrec.Metrics.metrics) =
+        (writefn m) in
+    let g_metrics: Fseerrec.Metrics.metrics = {
+        cpu_info = Fseerrec.Cpu.cpu_info_i;
+        cpu_freq = Fseerrec.Cpu_freq.cpu_freq_i;
+        cpu_temp = Fseerrec.Cpu_temp.cpu_temp_i;
+        mem_info = Fseerrec.Mem.mem_info_i;
+        net_info = Fseerrec.Net.net_info_i;
+        pwr_info = Fseerrec.Power.power_info_i;
+        snd_info = Fseerrec.Sound.sound_info_i;
+    } in
     while true do 
-        let poll = update_fn writefn update_cb in
-        let () = poll () in
+        let () = Cpu.info g_metrics noti_fn and
+            () = Cpu_freq.info g_metrics noti_fn and
+            () = Cpu_temp.info g_metrics noti_fn and
+            () = Mem.info g_metrics noti_fn and
+            () = Net.info g_metrics noti_fn and
+            () = Power.info g_metrics noti_fn and
+            () = Sound_proxy.info g_metrics noti_fn in
+        let () = writefn g_metrics in
         Unix.sleep Consts.poll_interval
     done
