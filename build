@@ -45,6 +45,6 @@ case $1 in
         ;;
     *)
         dune build --build-dir /tmp/build --profile release
-        ls -l /tmp/build/default/bin
+        find /tmp/build/default/bin
         ;;
 esac

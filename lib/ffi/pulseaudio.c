@@ -101,10 +101,13 @@ CAMLprim value caml_pa_tick(value unit)
 {
     CAMLparam1 (unit);
     int ret = 1;
-    if (pa_mainloop_iterate (_mainloop, 0, &ret) < 0)
-    {
-        fprintf (stderr, "pa_mainloop_iterate() failed.\n");
-        CAMLreturn (1);
+    // do a couple of ticks, to get internal state moving
+    for(int i = 0; i < 100; ++i) { 
+        if (pa_mainloop_iterate (_mainloop, 0, &ret) < 0)
+        {
+            fprintf (stderr, "pa_mainloop_iterate() failed.\n");
+            CAMLreturn (1);
+        }
     }
     CAMLreturn (ret);
 }

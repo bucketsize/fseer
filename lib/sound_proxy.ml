@@ -1,3 +1,3 @@
-let info () =
-    Fseerffi.Sound_pulseaudio.info ()
+let info zfn =
+    Fseerffi.Sound_pulseaudio.info zfn
 

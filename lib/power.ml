@@ -1,7 +1,7 @@
 open Futil
 open Fseerrec.Power
 
-let info () = 
+let info zfn = 
     let psu =
         if Sys.file_exists "/sys/class/power_supply/BAT0/status"
             then "Cell"

@@ -21,7 +21,7 @@ let cputemp_files =
         cputemp_files_ryzen
         cputemp_files_pi4
 
-let info () = 
+let info zfn = 
     let temps = 
         cputemp_files
         |> List.map (fun x -> 

@@ -8,7 +8,7 @@ let ni = {
 
 let pi = Float.of_int Consts.poll_interval
 
-let info () =
+let info zfn =
     let intfs = 
         read_file_lines "/proc/net/dev"
         |> List.filter (fun x -> not (has_in x "Inter"))

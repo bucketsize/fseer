@@ -15,7 +15,7 @@ type pa_info = {
 
 let pa_info0 = {context_connected=false;}
 
-let info () =
+let info zfn =
     if not pa_info0.context_connected then
         let () = Pulseaudio.connect_cb 
                     (fun status -> 
@@ -24,11 +24,17 @@ let info () =
             () = Pulseaudio.sink_cb 
                     (fun sink ->
                         let () = snd_info0.sink <- sink in
+                        let () = match zfn with
+                                    | Some fn -> fn () 
+                                    | None -> () in
                         printf "oc> sink: %s\n" sink) and
             () = Pulseaudio.volume_cb 
                     (fun volume -> 
                         let () = snd_info0.volume <-
                                     (Int.of_float (volume *. 100.0)) in
+                        let () = match zfn with
+                                    | Some fn -> fn () 
+                                    | None -> () in
                         printf "oc> volume: %f\n" volume) and
             () = Pulseaudio.muted_cb 
                     (fun muted ->

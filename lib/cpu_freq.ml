@@ -6,7 +6,7 @@ let cpufreq_files =
     |> List.map (Printf.sprintf "/sys/devices/system/cpu/cpu%d/cpufreq/scaling_cur_freq")
     |> List.filter (fun x -> Sys.file_exists x)
 
-let info () =  
+let info zfn =  
     let freqs =
         cpufreq_files
         |> List.map (fun f -> 

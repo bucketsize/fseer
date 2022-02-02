@@ -11,7 +11,7 @@ let cputime () =
     in
     List.fold_left (fun s x -> Int64.add s x) 0L cputs, List.nth cputs 3 
 
-let info ()  = 
+let info zfn = 
     let css, czz = cputime () in
     (* let () = Printf.printf "cputime ts: (%s, %s) - (%s, %s)\n" *)
     (*     (Int64.to_string css) (Int64.to_string czz) *)

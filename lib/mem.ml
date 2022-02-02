@@ -1,7 +1,7 @@
 open Futil
 open Fseerrec.Mem
 
-let info () =
+let info zfn =
     let mi = {usage=0.0; mt=0L; mf=0L; st=0L; sf=0L} in
     let mlines = read_file_lines "/proc/meminfo" in
     let parsfn = 
