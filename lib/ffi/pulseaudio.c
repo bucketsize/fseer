@@ -29,43 +29,42 @@ static void exit_signal_callback    (pa_mainloop_api *m
         , int sig
         , void *userdata);
 static int pa_connect();
-static int await_pa_connect();
 static int quit(int);
 
 static pa_mainloop* _mainloop = NULL;
 static pa_mainloop_api* _mainloop_api = NULL;
 static pa_context* _context = NULL;
-static bool _context_connected = false;
 static pa_signal_event* _signal = NULL;
 static char* _userdata = "somedata";
+static bool _context_connected = false;
 
-static value 
-    connect_cb,
-    sink_cb,
-    volume_cb,
-    muted_cb;
+static value connect_cb, sink_cb, volume_cb, muted_cb;
 CAMLprim value caml_pa_connect_cb(value cb)
 {
     CAMLparam1 (cb);
     connect_cb = cb;
+    caml_register_global_root(&connect_cb);
     CAMLreturn (0);
 }
 CAMLprim value caml_pa_sink_cb(value cb)
 {
     CAMLparam1 (cb);
     sink_cb = cb;
+    caml_register_global_root(&sink_cb);
     CAMLreturn (0);
 }
 CAMLprim value caml_pa_volume_cb(value cb)
 {
     CAMLparam1 (cb);
     volume_cb = cb;
+    caml_register_global_root(&volume_cb);
     CAMLreturn (0);
 }
 CAMLprim value caml_pa_muted_cb(value cb)
 {
     CAMLparam1 (cb);
     muted_cb = cb;
+    caml_register_global_root(&muted_cb);
     CAMLreturn (0);
 }
 void exec_connect_cb() 
@@ -101,17 +100,18 @@ CAMLprim value caml_pa_tick(value unit)
 {
     CAMLparam1 (unit);
     int ret = 1;
-    // do a couple of ticks, to get internal state moving
-    for(int i = 0; i < 100; ++i) { 
+
+    // call a few time to move things faster
+    for(int i=0; i<96; ++i)
+    {
         if (pa_mainloop_iterate (_mainloop, 0, &ret) < 0)
         {
-            fprintf (stderr, "pa_mainloop_iterate() failed.\n");
-            CAMLreturn (1);
+            fprintf (stderr, "cc> pa_mainloop_iterate() failed.\n");
+            CAMLreturn (ret);
         }
     }
     CAMLreturn (ret);
 }
-
 CAMLprim value caml_pa_connect(value unit)
 {
     CAMLparam1 (unit);
@@ -120,33 +120,20 @@ CAMLprim value caml_pa_connect(value unit)
     {
         CAMLreturn (1);
     }
-    await_pa_connect ();
     CAMLreturn (0);
 }
 
-static int await_pa_connect() {
-    int ret = 1;
-    while (!_context_connected)
-    {
-        if (pa_mainloop_iterate(_mainloop, 0, &ret) < 0)
-        {
-            fprintf(stderr, "pa_mainloop_iterate() failed.\n");
-            return 1;
-        }
-    }
-    return ret;
-}
 static int quit(int ret)
 {
     _mainloop_api->quit(_mainloop_api, ret);
     return ret;
 }
 static int pa_connect() {
-    _context_connected = false;
+    fprintf(stderr, "cc> pa connect\n");
     _mainloop = pa_mainloop_new();
     if (!_mainloop)
     {
-        fprintf(stderr, "pa_mainloop_new() failed.\n");
+        fprintf(stderr, "cc> pa_mainloop_new() failed.\n");
         return 1;
     }
 
@@ -154,14 +141,14 @@ static int pa_connect() {
 
     if (pa_signal_init(_mainloop_api) != 0)
     {
-        fprintf(stderr, "pa_signal_init() failed\n");
+        fprintf(stderr, "cc> pa_signal_init() failed\n");
         return 1;
     }
 
     _signal = pa_signal_new(SIGINT, exit_signal_callback, (void*) &_userdata);
     if (!_signal)
     {
-        fprintf(stderr, "pa_signal_new() failed\n");
+        fprintf(stderr, "cc> pa_signal_new() failed\n");
         return 1;
     }
     signal(SIGPIPE, SIG_IGN);
@@ -169,13 +156,13 @@ static int pa_connect() {
     _context = pa_context_new(_mainloop_api, "PulseAudio Test");
     if (!_context)
     {
-        fprintf(stderr, "pa_context_new() failed\n");
+        fprintf(stderr, "cc> pa_context_new() failed\n");
         return 1;
     }
 
     if (pa_context_connect(_context, NULL, PA_CONTEXT_NOAUTOSPAWN, NULL) < 0)
     {
-        fprintf(stderr, "pa_context_connect() failed: %s\n", pa_strerror(pa_context_errno(_context)));
+        fprintf(stderr, "cc> pa_context_connect() failed: %s\n", pa_strerror(pa_context_errno(_context)));
         return 1;
     }
 
@@ -206,7 +193,7 @@ static void context_state_callback(pa_context *c, void *userdata)
             break;
 
         case PA_CONTEXT_READY:
-            fprintf(stderr, "PulseAudio connection established.\n");
+            fprintf(stderr, "cc> pa context ready\n");
             pa_context_get_server_info(c, server_info_callback, userdata);
 
             // Subscribe to sink events from the server. This is how we get
@@ -218,13 +205,13 @@ static void context_state_callback(pa_context *c, void *userdata)
             break;
 
         case PA_CONTEXT_TERMINATED:
-            fprintf(stderr, "PulseAudio connection terminated.\n");
+            fprintf(stderr, "cc> pa context terminated\n");
             quit(0);
             break;
 
         case PA_CONTEXT_FAILED:
         default:
-            fprintf(stderr, "Connection failure: %s\n", pa_strerror(pa_context_errno(c)));
+            fprintf(stderr, "cc> pa context failed: %s\n", pa_strerror(pa_context_errno(c)));
             quit(1);
             break;
     }
@@ -267,7 +254,7 @@ static void sink_info_callback(pa_context *c, const pa_sink_info *i,
         float volume = (float)pa_cvolume_avg(&(i->volume)) / (float)PA_VOLUME_NORM;
         exec_volume_cb(volume);
         exec_muted_cb(i->mute);
-        printf("percent volume = %.0f%%%s\n", volume * 100.0f, i->mute ? " (muted)" : "");
+        fprintf(stderr, "cc> pa volume = %.0f%%%s\n", volume * 100.0f, i->mute ? " (muted)" : "");
     }
 }
 
@@ -278,7 +265,7 @@ static void sink_info_callback(pa_context *c, const pa_sink_info *i,
 static void server_info_callback(pa_context *c, const pa_server_info *i,
         void *userdata)
 {
-    printf("default sink name = %s\n", i->default_sink_name);
+    fprintf(stderr, "cc> default sink name = %s\n", i->default_sink_name);
     exec_sink_cb(i->default_sink_name);
     pa_context_get_sink_info_by_name(c, i->default_sink_name, sink_info_callback, userdata);
 }
