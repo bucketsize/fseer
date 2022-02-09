@@ -41,6 +41,7 @@ case $1 in
         ;;
     install)
         assert_file $bin_new
+        rm ~/.local/bin/$bin_name.$(arch)
         cp -av $bin_new ~/.local/bin
         ;;
     *)

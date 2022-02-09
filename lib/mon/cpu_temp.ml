@@ -1,4 +1,4 @@
-open Futil
+open Fseer.Futil
 open Fseerrec.Cpu_temp
 
 let cputemp_files_ryzen = 

@@ -1,4 +1,4 @@
-open Futil
+open Fseer.Futil
 open Fseerrec.Cpu
 
 let ci = {arch="foo"; usage=0.0; cs=0L; cz=0L}

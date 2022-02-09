@@ -1,4 +1,4 @@
-open Futil
+open Fseer.Futil
 open Fseerrec.Cpu_freq
 
 let cpufreq_files =
@@ -10,7 +10,7 @@ let info (m: Fseerrec.Metrics.metrics) zfn =
     let freqs =
         cpufreq_files
         |> List.map (fun f -> 
-            let sfreq = (List.nth (Futil.read_file_lines f) 0) in
+            let sfreq = (List.nth (read_file_lines f) 0) in
             let mfreq = Int32.div (Int32.of_string sfreq) 1000l in
             Int32.to_int mfreq )
     in

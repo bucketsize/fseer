@@ -1,4 +1,4 @@
-open Futil
+open Fseer.Futil
 open Fseerrec.Net
 
 let ni = {
@@ -6,7 +6,7 @@ let ni = {
         ("none", {name="none"; rx=0L; tx=0L; dr=0.0; dt=0.0});
     ]}
 
-let pi = Float.of_int Consts.poll_interval
+let pi = Float.of_int Fseer.Consts.poll_interval
 
 let info (m: Fseerrec.Metrics.metrics) zfn =
     let intfs = 

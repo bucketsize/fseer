@@ -5,9 +5,21 @@ let weDays = ["Su"; "Mo"; "Tu"; "We"; "Th"; "Fr"; "Sa"]
 let months = ["Jan"; "Feb"; "Mar"; "Apr"; "May"; "Jun";
               "Jul"; "Aug"; "Sep"; "Oct"; "Nov"; "Dec"]
 
+let kb = 1024.
+let mb = 1024. *. 1024.
+
+let hume x =  
+    if x > kb && x < mb then
+        sprintf "%.1fM" (x /. kb) 
+    else
+        if x > mb then 
+            sprintf "%.1fK" (x /. mb) 
+        else
+            sprintf "%.0f" x 
+
 let write (p:Metrics.metrics) = 
     let cpu = p.cpu_info   and
-        cpuf = p.cpu_freq  and
+        _   = p.cpu_freq  and
         cput = p.cpu_temp  and
         mem = p.mem_info   and
         net = p.net_info   and
@@ -35,10 +47,9 @@ let write (p:Metrics.metrics) =
             else (pwr.psu, pwr.level, pwr.status) and
         timetm = Unix.localtime (Unix.time ()) in
     printf
-        "%%{l} /%s %s %s\
-         %%{c} /%s | %s %02d, %02d | %02d:%02d:%02d\
-         %%{r} /Cpu %02.0f %4dMHz %3dC /Mem %2.0f /%s %.1f %.1f /Vol %02d %s /%s %02d %s"
-        "?" "?" "?"
+        "%%{l} %s, %s %02d, %02d | %02d:%02d:%02d\
+         %%{c} %s %s %s\
+         %%{r} Cpu %02.0f %3dC | Mem %2.0f | Net:%s %s %s | Vol %02d %s | %s %02d %s"
         (List.nth weDays timetm.tm_wday)
         (List.nth months timetm.tm_mon)
         timetm.tm_mday
@@ -46,11 +57,11 @@ let write (p:Metrics.metrics) =
         timetm.tm_hour
         timetm.tm_min
         timetm.tm_sec
+        "." "." "."
         (cpu.usage *. 100.0)
-        cpuf.freq_avg
         cput.temp_max
         (mem.usage *. 100.0)
-        n rr rx
+        n (hume rr) (hume rx)
         snd.volume
         (if snd.muted then "muted" else "")
         psu pl ps;

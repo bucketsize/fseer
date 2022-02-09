@@ -1,0 +1,4 @@
+(library
+ (name fseerctl)
+ (libraries base stdio str fseer fseerffi fseerrec)
+ (c_library_flags (:standard -lpulse)))

@@ -9,4 +9,4 @@
    )
  ; (flags :standard -cclib -lasound -cclib -lpulse -cclib -lc -cclib -lasmrun)
  (flags :standard -cclib -lpulse)
- (libraries base stdio str unix ctypes.foreign fseer fseerffi fseerctypes fseerrec fseerout))
+ (libraries base stdio str unix ctypes.foreign fseer fseerffi fseerctypes fseerrec fseerout fseermon fseerctl))
