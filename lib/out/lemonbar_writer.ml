@@ -1,38 +1,30 @@
 open Printf
 open Fseerrec
+open Fseer
 
-let weDays = ["Su"; "Mo"; "Tu"; "We"; "Th"; "Fr"; "Sa"]
-let months = ["Jan"; "Feb"; "Mar"; "Apr"; "May"; "Jun";
-              "Jul"; "Aug"; "Sep"; "Oct"; "Nov"; "Dec"]
-
-let kb = 1024.
-let mb = kb *. 1024.
-let gb = mb *. 1024.
 let hume x =  
-    if x > kb && x < mb then
-        sprintf "%.1fM" (x /. kb) 
+    if x > Consts.kb && x < Consts.mb then
+        sprintf "%.1fM" (x /. Consts.kb) 
     else
-        if x > mb && x < gb then 
-            sprintf "%.1fK" (x /. mb) 
+        if x > Consts.mb && x < Consts.gb then 
+            sprintf "%.1fK" (x /. Consts.mb) 
         else
-            if x > gb then
-                sprintf "%.1fK" (x /. gb)
+            if x > Consts.gb then
+                sprintf "%.1fK" (x /. Consts.gb)
             else
                 sprintf "%.0f" x 
 
-let xterm_w = "urxvt -name Popeye -geometry 64x16 -e sh -c "
-let xterm_s = "urxvt -name Popeye -geometry 24x24 -c sh -e "
 
 let action = [
-    ("cpu", xterm_w ^ "'cat /proc/cpuinfo | less'");
-    ("mem", xterm_w ^ "'cat /proc/meminfo | less'");
+    ("cpu", Consts.xterm_w ^ "'cat /proc/cpuinfo | less'");
+    ("mem", Consts.xterm_w ^ "'cat /proc/meminfo | less'");
     ("net", "connman-gtk");
-    ("sound", xterm_s ^ "alsamixer");
-    ("date", xterm_w ^ "calcurse")
+    ("sound", Consts.xterm_s ^ "alsamixer");
+    ("date", Consts.xterm_w ^ "calcurse")
 ]
 
 let wrap_action a s =
-    let oa = Fseer.Futil.get_item action a in
+    let oa = Futil.get_item action a in
     match oa with
     | Some (k, v) ->
         sprintf "%%{A:%s:}%s%%{A}" v s
@@ -90,8 +82,8 @@ let date label =
         timetm = Unix.localtime (Unix.time ()) 
     in
     sprintf "%s%s, %s %02d, %4d %02d:%02d:%02d" label
-        (List.nth weDays timetm.tm_wday)
-        (List.nth months timetm.tm_mon)
+        (List.nth Consts.weDays timetm.tm_wday)
+        (List.nth Consts.months timetm.tm_mon)
         timetm.tm_mday
         (timetm.tm_year + 1900)
         timetm.tm_hour
