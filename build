@@ -6,7 +6,6 @@ bin=$bin_dir/$bin_name.exe
 pack_dir=/tmp/$bin_name
 bin_new=$pack_dir/$bin_name.$(arch)
 
-
 assert() {
     if [ "" = "$1" ]; then
         echo "expect valid"
@@ -41,8 +40,7 @@ case $1 in
         ;;
     install)
         assert_file $bin_new
-        rm ~/.local/bin/$bin_name.$(arch)
-        cp -av $bin_new ~/.local/bin
+        cp -avf $bin_new ~/.local/bin
         ;;
     *)
         dune build --build-dir /tmp/build --profile release
